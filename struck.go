@@ -10,6 +10,7 @@ import (
 const (
 	KeyTimestamp = "Timestamp"
 	KeyHost      = "Host"
+	KeyMessage   = "Message"
 )
 
 type Struck struct {
@@ -17,7 +18,7 @@ type Struck struct {
 	Labels         []string
 }
 
-func (s *Struck) Log(labels ...interface{}) {
+func (s *Struck) Log(message string, labels ...interface{}) {
 	if len(labels) != len(s.Labels) {
 		panic("Number of labels does not match.")
 	}
@@ -30,6 +31,7 @@ func (s *Struck) Log(labels ...interface{}) {
 	}
 	m[KeyTimestamp] = time.Now().Unix()
 	m[KeyHost], _ = os.Hostname()
+	m[KeyMessage] = message
 	err := json.NewEncoder(os.Stdout).Encode(m)
 	if err != nil {
 		log.Fatalf("Failed to log message", err)
